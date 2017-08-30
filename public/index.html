@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>File Upload</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body ng-app="myApp">
+<div class="container">
+	<div ui-view>
+	
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+		  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		    <ul class="navbar-nav mr-auto">
+		      <li class="nav-item active">
+		        <a class="nav-link" ui-sref="home">Post</a>
+		      </li>
+		      <li class="nav-item active">
+		        <a class="nav-link" ui-sref="show">Show</a>
+		      </li>
+		    </ul>
+		  </div>
+		</nav>
+	<br>
+		<form action="/api/image" enctype="multipart/form-data" method="POST">
+			<label>Enter Name
+				<input type="text" name="name">
+			</label>
+			<br>
+			<label>Upload Image</label>
+			<input type="file" name="myFile" onchange="previewFile()" id="inputfile" style="width:0;height:0;">
+			<label for="inputfile" class="btn btn-success">Choose a file</label>
+			<br>
+				<div class="container">
+					<img src="" height="200" alt="Image preview..." >
+				</div>
+			<br>
+
+			<button type="submit" class="btn btn-success">Upload Image</button>
+		</form>
+	<div>	
+</div>
+</body>
+</html>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function previewFile() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  reader.onloadend = function () {
+    preview.src = reader.result;
+  }
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
+}
+var app = angular.module('myApp',["ui.router"]);
+app.controller('showCtrl',['$scope','$http',function($scope,$http){
+
+	 $http.get('/api/image').then(function successCallback(response) {
+            $scope.images=response.data;
+            
+          },
+        function errorCallback(response) {
+            alert(response);
+        });
+
+
+}]);
+app.config(['$stateProvider','$urlRouterProvider',function ($stateProvider,$urlRouterProvider) {
+ $stateProvider
+      .state('home', {
+        url:'/',
+        templateUrl:'index.html',
+      })
+      .state('show', {
+        url:'/show',
+        templateUrl:'show.html',
+        controller:'showCtrl'
+      })
+      $urlRouterProvider.otherwise('/');
+}]);	
+</script>
