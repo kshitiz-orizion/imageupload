@@ -15,6 +15,6 @@
 </nav>
 <div ng-repeat="image in images" class="container">
 	<div ng-repeat="x in image" >
-	<img src="../uploads/{{x}}" style="width:200px;height:200px;float:left;margin:10px;">	
+	<img src="../uploads/{{x}}" style="width:200px;height:200px;float:left;margin:10px;" onerror="this.src='uploads/maxresdefault.jpg'">	
 	</div>	
 </div>
