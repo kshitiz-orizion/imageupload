@@ -20,11 +20,11 @@ var upload =multer({storage:storage}).single('myFile');
 module.exports = function(app){
 	app.post('/api/image',upload,function(req,res){		
 		cloudinary.uploader.upload(req.file.path,function(result) { 
-  				console.log(result.url);
   				var filePath =req.file.path; 
   				fs.unlinkSync(filePath);
   				var image = new Img();
-				image.name=req.body.name; 
+				image.name=req.body.name;
+				image.original_name=req.file.originalname;
 				image.url =result.url;	 
 				image.save(function(err,res1){
 				 	if(err){
