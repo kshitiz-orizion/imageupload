@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 require('./app/routes/image.js')(app);
 app.listen(3000,function(err,res){
 	if(err){
-		console.log('SNC');
+		console.log('Server Not Connected');
 	}
 	else{
 		console.log('server running on port 3000');

@@ -3,7 +3,12 @@ var multer=require('multer');
 var express = require('express');
 var fs=require('fs'); 
 var app = express();
-
+var cloudinary=require('cloudinary');
+cloudinary.config({ 
+  cloud_name: 'smartbeings', 
+   api_key: '417639958678624', 
+   api_secret: 'l2c-M1irtD-Mrpd6HcyDpPj4c2g' 
+});
 var storage = multer.diskStorage({
   destination: 'public/uploads/',
     filename: function (req, file, cb) {
@@ -11,35 +16,31 @@ var storage = multer.diskStorage({
             cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
         }
 });
-var upload = multer({ storage: storage }).single('myFile');
+var upload =multer({storage:storage}).single('myFile');
 module.exports = function(app){
-	app.post('/api/image',upload,function(req,res){
-		 var image = new Img();
-		 image.name=req.body.name; 
-		 image.image.data = req.file.path;
-		 image.image.contentType =req.file.mimetype;	 
-		 image.save(function(err,res1){
-		 	if(err){
-		 		res.json({success:false, image:[]});
-		 	}
-	 	else{	
-		 		// res.json({success:true,image:res1});
-		 		return res.redirect('/#!/show');
-		 		}	 	
-		 });
-
+	app.post('/api/image',upload,function(req,res){		
+		cloudinary.uploader.upload(req.file.path,function(result) { 
+  				console.log(result.url);
+  				var filePath =req.file.path; 
+  				fs.unlinkSync(filePath);
+  				var image = new Img();
+				image.name=req.body.name; 
+				image.url =result.url;	 
+				image.save(function(err,res1){
+				 	if(err){
+				 		res.json({success:false, image:[]});
+				 	}
+			 	else{	
+				 		return res.redirect('/#!/show');
+				 		}	 	
+				 });
+		});
 	});
 	app.get('/api/image', function(req, res){		
-			Img.find({}).exec(function (err, image) {
-				var image1=[];
-				if (err){
-					res.json({success: false, image: []});
-				} else {
-					for(i=0;i<image.length;i++){
-						image1[i]=new Buffer(image[i].image.data,'base64').toString().slice(15);
-					}
-	    			res.json({success:true, image:image1});   			
-				}
-			});
+			Img.find({},function(err, image){
+        		if(err)
+      			res.send(err);
+    			res.json({success:true, images:image});
+  			});
 		});
 }

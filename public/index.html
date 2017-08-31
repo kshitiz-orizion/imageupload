@@ -7,7 +7,6 @@
 <body ng-app="myApp">
 <div class="container">
 	<div ui-view>
-	
 		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 		  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>
@@ -64,12 +63,15 @@ function previewFile() {
     preview.src = "";
   }
 }
+</script>
+
+<script type="text/javascript">
 var app = angular.module('myApp',["ui.router"]);
 app.controller('showCtrl',['$scope','$http',function($scope,$http){
 
 	 $http.get('/api/image').then(function successCallback(response) {
             $scope.images=response.data;
-            
+            console.log($scope.images);       
           },
         function errorCallback(response) {
             alert(response);
