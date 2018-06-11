@@ -5,9 +5,9 @@ var fs=require('fs');
 var app = express();
 var cloudinary=require('cloudinary');
 cloudinary.config({ 
-  cloud_name: 'smartbeings', 
-   api_key: '417639958678624', 
-   api_secret: 'l2c-M1irtD-Mrpd6HcyDpPj4c2g' 
+  cloud_name: 'YOUR CLOUD NAME ON CLOUDINARY', 
+   api_key: 'YOUR API KEY ON CLOUDINARY', 
+   api_secret: 'YOUR API SECRET KEY ON CLOUDINARY' 
 });
 var storage = multer.diskStorage({
   destination: 'public/uploads/',
